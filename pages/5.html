@@ -1,0 +1,228 @@
+<!DOCTYPE html>  
+<html>
+<head>  
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+<title>Hello, World</title>  
+<style type="text/css">  
+html{height:100%}  
+body{height:100%;margin:0px;padding:0px}  
+#container{height:100% ; width: 100%}
+
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=YBL07cGISw82llLLedsiks1jmCQvybUa">
+
+</script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+</head>  
+ 
+<body>  
+<div id="container">
+</div>
+<script type="text/javascript">
+var map = new BMap.Map("container");
+
+var point = new BMap.Point(104.105, 30.681);
+
+map.addControl(new BMap.NavigationControl());//平移缩放的组件
+map.centerAndZoom(point, 17);
+
+map.enableScrollWheelZoom();   //���ù��ַŴ���С��Ĭ�Ͻ���
+map.enableContinuousZoom();    //���õ�ͼ����
+
+
+
+var points =[
+    {"lat":30.666546,"lng":104.093676,"count":40},
+	{"lat":30.674868,"lng":104.069292,"count":50},
+	{"lat":30.596141,"lng":104.057734,"count":882},
+	{"lat":30.697877,"lng":104.045469,"count":50},
+	{"lat":30.669043,"lng":104.046015,"count":869},
+	{"lat":30.648617,"lng":104.063297,"count":659},
+	{"lat":104.058562,"lng":104.058562,"count":530},
+	{"lat":30.75082,"lng":104.124902,"count":709},
+	{"lat":30.699744,"lng":104.073981,"count":844},
+	{"lat":30.648612,"lng":103.867907,"count":693},
+	{"lat":30.835119,"lng":104.164906,"count":896},
+	{"lat":30.656951,"lng":104.00179,"count":560},
+	{"lat":30.682306,"lng":103.96824,"count":853},
+	{"lat":30.648546,"lng":104.055671,"count":717},
+	{"lat":30.648566,"lng":104.062604,"count":923},
+	{"lat":30.645391,"lng":104.072533,"count":52},
+	{"lat":30.653785,"lng":104.109971,"count":60},
+	{"lat":30.694653,"lng":104.100129,"count":513},
+	{"lat":30.702009,"lng":103.836783,"count":832},
+	{"lat":30.806902,"lng":103.882643,"count":975},
+	{"lat":30.668588,"lng":104.046425,"count":539},
+	{"lat":30.625135,"lng":104.039281,"count":50},
+	{"lat":30.647599,"lng":104.086428,"count":824},
+	{"lat":30.58497,"lng":104.272115,"count":892},
+	{"lat":30.679269,"lng":104.066328,"count":948},
+	{"lat":30.884655,"lng":104.29911,"count":557},
+	{"lat":30.58497,"lng":104.272115,"count":717},
+	{"lat":30.984919,"lng":103.663009,"count":505},
+	{"lat":30.68928,"lng":104.036801,"count":775}];
+
+console.log(points);	
+if(!isSupportCanvas()){
+    alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
+}
+
+heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":60});
+map.addOverlay(heatmapOverlay);
+heatmapOverlay.setDataSet({data:points,max:50});
+//是否显示热力图
+
+function closeHeatmap(){
+    heatmapOverlay.hide();
+}
+closeHeatmap();
+function setGradient(){
+
+    var gradient = {};
+    var colors = document.querySelectorAll("input[type='color']");
+    colors = [].slice.call(colors,0);
+    colors.forEach(function(ele){
+        gradient[ele.getAttribute("data-key")] = ele.value;
+    });
+    heatmapOverlay.setOptions({"gradient":gradient});
+}
+//判断浏览区是否支持canvas
+function isSupportCanvas(){
+    var elem = document.createElement('canvas');
+    return !!(elem.getContext && elem.getContext('2d'));
+}
+
+
+
+
+function Research(){
+	this.defaultAnchor=BMAP_ANCHOR_TOP_LEFT;
+	this.defaultOffset=new BMap.Size(230,30);
+}
+Research.prototype=new BMap.Control();
+
+Research.prototype.initialize = function(map){    
+    // 创建一个DOM元素   
+    var input = document.createElement("input");    
+
+      
+    // 添加DOM元素到地图中   
+    map.getContainer().appendChild(input);
+	input.style.height="30px";
+	input.style.width="700px";  
+	input.placeholder="在此搜索…";
+	input.id="search1";
+    input.type="text";
+	input.onkeypress=function theLocation(){
+
+        if(event.keyCode==13){
+
+            var city = document.getElementById("search1").value;
+            if(city != ""){
+                map.centerAndZoom(city,15);      // 用城市名设置地图中心点
+            }
+
+        }
+
+    }
+
+
+
+
+    // 将DOM元素返回  
+	
+    return input;    
+ }
+
+ function theLocation(){
+
+    if(event.keyCode==13){
+
+        var city = document.getElementById("search1").value;
+        if(city != ""){
+            map.centerAndZoom(city,15);      // 用城市名设置地图中心点
+        }
+
+    }
+
+ }
+
+
+
+ var r=new Research();
+ map.addControl(r);
+
+//add button
+function MapButton(){
+	this.defaultAnchor=BMAP_ANCHOR_TOP_RIGHT;
+	this.defaultOffset=new BMap.Size(70,30);
+}
+MapButton.prototype=new BMap.Control();
+
+
+MapButton.prototype.initialize = function(map){    
+    // 创建一个DOM元素   
+    var div = document.createElement("div");    
+               
+      
+    // 添加DOM元素到地图中   
+    map.getContainer().appendChild(div);
+	div.style.height="100px";
+	div.style.width="40px";
+	var input1=document.createElement("input");
+	div.appendChild(input1);
+	input1.style.height="50px";
+	input1.style.width="80px";
+	input1.type="button";
+	input1.value="开启热力图";
+	input1.id="hot graph";
+	input1.onclick=function openHeatmap(){
+        heatmapOverlay.show();
+    }
+
+
+
+    map.getContainer().appendChild(div);
+    div.style.height="100px";
+    div.style.width="30px";
+    var input3=document.createElement("input");
+    div.appendChild(input3);
+    input3.style.height="50px";
+    input3.style.width="80px";
+    input3.type="button";
+    input3.value="关闭热力图";
+    input3.id="hot graphcl";
+    input3.onclick=function closeHeatmap(){
+        heatmapOverlay.hide();
+    }
+
+
+
+	
+	
+	var input2=document.createElement("input");
+	div.appendChild(input2);
+	input2.style.height="50px";
+	input2.style.width="70px";
+	input2.type="button";
+	input2.value="患者特征";
+	input2.id="patient";
+	input2.style.marginTop="40px";
+    input2.onclick="closeHeatmap()";
+    // 将DOM元素返回  
+	
+    return div;    
+ }
+ 
+ var d=new MapButton();
+ map.addControl(d);
+
+
+</script>
+
+
+
+
+</body>  
+</html>

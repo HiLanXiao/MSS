@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <link href='http://fonts.googleapis.com/css?family=Oleo+Script' rel='stylesheet' type='text/css'>
+    <link type="text/css" href="../css/login.css" rel="stylesheet" />
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+    </script>
+
+
+    <script>
+        function checkpwd(){
+            var a = $("#username1").val();
+            var b = $("#userpwd1").val();
+
+            var a1 = $("#username1").attr("name");
+            var b1 = $("#userpwd1").attr("name");
+        
+            $.ajax({
+                 type: "post",
+                 url: "http://analyzeillness.chinacloudsites.cn/backforMSS/Login",
+                 contentType: "application/json;charset=utf-8",
+                 data: JSON.stringify({username: a, password: b}),
+                 dataType: "json",
+                 success: function(data) {
+                    if(data.DictJsonStatus == 200){
+                        if(data.code == 1){
+                            wiondow.location.href = 'data.url';
+                        }
+                        else{
+                            alert("登录失败，账号或密码错误");
+                        }
+                    }
+                 }
+             });
+        
+
+            
+    </script>
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">Login to MSS</div>
+        <form>
+            <ul>
+                <li>
+                    <div class="text">
+                        <span class="yonghu"></span><input id="username1" type="text" name="username" placeholder="请输入用户名">
+                    </div>
+                </li>
+                <li>
+                    <div class="password">
+                        <span class="mima"></span><input id="userpwd1" type="password" name="password" placeholder="••••••••••••••">
+                    </div>
+                </li>
+                <li class="remember">
+                    <input type="checkbox">Remember Me
+                </li>
+                <li>
+                    <a href="forget.html">Forgot username or password?</a>
+                </li>
+
+                <li>
+                    <a href="register.html">Haven't had an account yet?</a>
+                </li>
+
+                <li>
+                    <input type="button" value="Login" onclick="checkpwd()">
+                </li>
+            </ul>
+        </form>
+        <div class="footer">
+            <p>Microsoft Innovation Studio is dedicated to smart healthcare</p>
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

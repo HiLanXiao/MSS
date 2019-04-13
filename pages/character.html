@@ -1,0 +1,168 @@
+
+<!DOCTYPE html PUBLIC >
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>患病特征</title>
+
+<style>
+*{
+margin:0px;
+padding:0px;
+}
+.zhezhao
+{
+width:100%;
+height:100%;
+background-color:#000;
+filter:alpha(opacity=50);
+-moz-opacity:0.5;
+opacity:0.5;
+position:absolute;
+left:0px;
+top:0px;
+display:none;
+z-index:1000;
+}
+.login
+{
+width:280px;
+height:180px;
+position:absolute;
+top:200px;
+left:50%;
+background-color:white;
+margin-left:-140px;
+display:none;
+z-index:1500;
+}
+.content
+{
+margin-top:50px;
+color:red;
+line-height:200px;
+height:200px;
+text-align:center;
+}
+</style>
+<script type="text/javascript">
+    window.onload=function()
+{
+    var zhezhao=document.getElementById("zhezhao");
+    var login=document.getElementById("login");
+    var bt=document.getElementById("bt");
+    var btclose=document.getElementById("btclose");
+
+bt.onclick=function()
+{
+    zhezhao.style.display="block";
+    login.style.display="block";
+}
+btclose.onclick=function()
+{
+    zhezhao.style.display="none";
+    login.style.display="none";
+}
+}
+</script>
+  </head>
+    <body>
+    <div class="zhezhao" id="zhezhao"></div>
+    <div class="login" id="login"><style type="text/css">
+        .container{
+            width: 200px;
+            height: 20px;
+            background-color: lightgreen;
+        }
+        #progress{
+            height: 20px;
+            background-color: orange;
+            display: inline-block;
+        }
+
+    </style>
+        </head>
+        <body>
+        <p >请填写患病特征（<a href="/backforMSS/Download?name=example.csv">患病特征模板</a>）</p>
+        <form action="backforMSS/UploadServlet"
+              enctype="multipart/form-data" method="post">
+            上传患病特征模板: <input type="file" name="file1" id="file"><br />
+            <div class='container'>
+                <span id="progress"></span>
+            </div>
+        </form>
+        <br>
+        <button onclick="fileSelected()">文件信息</button><button onclick="uploadFile()">确认上传</button>
+        <div id="info">
+            <div id="fileName"></div>
+            <div id="fileSize"></div>
+            <div id="fileType"></div>
+        </div>
+        <div id="result"></div>
+        <script>
+            function fileSelected() {
+                var file = document.getElementById('file').files[0];
+                if (file) {
+                    var fileSize = 0;
+                    if (file.size > 1024 * 1024)
+                        fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+                    else
+                        fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+                    document.getElementById('fileName').innerHTML = 'Name: ' + file.name;
+                    document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
+                    document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+                }
+            }
+            function uploadFile() {
+                var fd = new FormData();
+                fd.append("file", document.getElementById('file').files[0]);
+                var xhr = new XMLHttpRequest();
+           
+                xhr.upload.addEventListener("progress", uploadProgress, false);
+                xhr.addEventListener("load", uploadComplete, false);
+                xhr.addEventListener("error", uploadFailed, false);
+                xhr.addEventListener("abort", uploadCanceled, false);
+                xhr.open("POST", "backforMSS/UploadServlet");
+                xhr.send(fd);
+                
+            }
+
+            function uploadProgress(evt) {
+                if (evt.lengthComputable) {
+                    var percent = Math.round(evt.loaded * 100 / evt.total);
+
+                    document.getElementById('progress').innerHTML = percent.toFixed(2) + '%';
+                    document.getElementById('progress').style.width = percent.toFixed(2) + '%';
+                }
+                else {
+                    document.getElementById('progress').innerHTML = 'unable to compute';
+                }
+            }
+            function uploadComplete(evt) {
+                document.getElementById('result').innerHTML = evt.target.responseText;
+            }
+            function uploadFailed(evt) {
+                alert("There was an error attempting to upload the file.");
+            }
+            function uploadCanceled(evt) {
+                alert("The upload has been canceled by the user or the browser dropped the connection.");
+            }
+        </script><button id="btclose">点击关闭</button></div>
+    <div><button id="bt">病患特征</button></div>
+    </body>
+</html>
+<style type="text/css">
+    .container{
+        width: 200px;
+        height: 20px;
+        background-color: lightgreen;
+    }
+    #progress{
+        height: 20px;
+        background-color: orange;
+        display: inline-block;
+    }
+
+</style>
+</body>
+</html>
